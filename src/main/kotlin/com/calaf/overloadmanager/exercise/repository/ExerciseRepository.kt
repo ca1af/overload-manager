@@ -1,0 +1,25 @@
+package com.calaf.overloadmanager.exercise.repository
+
+import com.calaf.overloadmanager.exercise.domain.Exercise
+import com.calaf.overloadmanager.exercise.domain.ExerciseCategory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
+import org.springframework.data.jpa.repository.JpaRepository
+import org.springframework.data.jpa.repository.Query
+
+interface ExerciseRepository : JpaRepository<Exercise, Long> {
+
+    @Query("""
+        SELECT e FROM Exercise e
+        WHERE (e.isCustom = false OR e.createdBy.id = :userId)
+        AND (:category IS NULL OR e.category = :category)
+        AND (:search IS NULL OR LOWER(e.nameKo) LIKE LOWER(CONCAT('%', :search, '%'))
+             OR LOWER(e.nameEn) LIKE LOWER(CONCAT('%', :search, '%')))
+    """)
+    fun findAllAccessible(
+        userId: Long,
+        category: ExerciseCategory?,
+        search: String?,
+        pageable: Pageable,
+    ): Page<Exercise>
+}
