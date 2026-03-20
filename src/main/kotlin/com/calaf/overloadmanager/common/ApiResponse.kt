@@ -24,3 +24,14 @@ data class FieldError(
     val field: String,
     val message: String,
 )
+
+data class PageResponse<T>(
+    val content: List<T>,
+    val totalElements: Long,
+    val totalPages: Int,
+    val number: Int,
+    val size: Int,
+    val first: Boolean,
+    val last: Boolean,
+    val empty: Boolean,
+)

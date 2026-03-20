@@ -60,7 +60,7 @@ test.describe('Dashboard', () => {
     await page.waitForURL('/history', { timeout: 5_000 });
   });
 
-  test.fixme('should create session successfully (BUG-09: 500 error on POST /api/v1/sessions)', async ({ page }) => {
+  test('should create session successfully', async ({ page }) => {
     await page.getByRole('button', { name: '오늘 운동 시작' }).click();
     await page.waitForURL(/\/sessions\/\d+/, { timeout: 10_000 });
   });

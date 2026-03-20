@@ -1,10 +1,9 @@
 package com.calaf.overloadmanager.exercise.adapter.`in`.web
 
 import com.calaf.overloadmanager.common.ApiResponse
+import com.calaf.overloadmanager.common.PageResponse
 import com.calaf.overloadmanager.exercise.domain.model.ExerciseCategory
 import com.calaf.overloadmanager.exercise.domain.port.`in`.*
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.http.ResponseEntity
@@ -26,13 +25,18 @@ class ExerciseController(
         @RequestParam(required = false) search: String?,
         @PageableDefault(size = 20) pageable: Pageable,
         auth: Authentication?,
-    ): ResponseEntity<ApiResponse<Page<ExerciseResponse>>> {
+    ): ResponseEntity<ApiResponse<PageResponse<ExerciseResponse>>> {
         val userId = auth?.principal as? Long
         val result = listExercisesUseCase.listExercises(userId, category, search, pageable.pageNumber, pageable.pageSize)
-        val page: Page<ExerciseResponse> = PageImpl(
-            result.content.map { it.toResponse() },
-            pageable,
-            result.totalElements,
+        val page = PageResponse(
+            content = result.content.map { it.toResponse() },
+            totalElements = result.totalElements,
+            totalPages = result.totalPages,
+            number = result.number,
+            size = result.size,
+            first = result.first,
+            last = result.last,
+            empty = result.empty,
         )
         return ResponseEntity.ok(ApiResponse.success(page))
     }

@@ -12,8 +12,14 @@ export async function getSessions(params?: {
 }
 
 export async function createSession(): Promise<WorkoutSession> {
-  const res = await client.post<WorkoutSession>('/sessions');
-  return res.data;
+  const now = new Date();
+  const sessionDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
+  const startedAt = now.toISOString().replace('Z', ''); // LocalDateTime format
+  const res = await client.post<{ data: WorkoutSession }>('/sessions', {
+    sessionDate,
+    startedAt,
+  });
+  return res.data.data!;
 }
 
 export async function getSession(id: number): Promise<WorkoutSession> {

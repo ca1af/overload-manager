@@ -1,10 +1,9 @@
 package com.calaf.overloadmanager.workout.adapter.`in`.web
 
 import com.calaf.overloadmanager.common.ApiResponse
+import com.calaf.overloadmanager.common.PageResponse
 import com.calaf.overloadmanager.workout.domain.port.`in`.*
 import jakarta.validation.Valid
-import org.springframework.data.domain.Page
-import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
 import org.springframework.format.annotation.DateTimeFormat
@@ -32,13 +31,18 @@ class WorkoutSessionController(
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) startDate: LocalDate?,
         @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) endDate: LocalDate?,
         @PageableDefault(size = 20) pageable: Pageable,
-    ): ResponseEntity<ApiResponse<Page<SessionSummaryResponse>>> {
+    ): ResponseEntity<ApiResponse<PageResponse<SessionSummaryResponse>>> {
         val userId = auth.principal as Long
         val result = listSessionsUseCase.listSessions(userId, startDate, endDate, pageable.pageNumber, pageable.pageSize)
-        val page: Page<SessionSummaryResponse> = PageImpl(
-            result.content.map { it.toResponse() },
-            pageable,
-            result.totalElements,
+        val page = PageResponse(
+            content = result.content.map { it.toResponse() },
+            totalElements = result.totalElements,
+            totalPages = result.totalPages,
+            number = result.number,
+            size = result.size,
+            first = result.first,
+            last = result.last,
+            empty = result.empty,
         )
         return ResponseEntity.ok(ApiResponse.success(page))
     }
