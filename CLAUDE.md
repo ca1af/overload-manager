@@ -81,43 +81,37 @@ Move to `docs/features/done/` on completion.
 
 ---
 
-## "Done" Criteria (All Teams)
-
-1. All unit/integration tests pass
-2. Zero compilation errors (`./gradlew build` + `npm run build`)
-3. E2E tests pass for related workflows (see [QA Guide](docs/conventions/qa/GUIDE.md))
-
----
-
 ## User Collaboration Pipeline
 
 사용자는 대화를 통해 요구사항을 전달하고, Claude가 모든 문서를 작성한다.
-파일 존재 여부와 파일 내 마커가 게이트 역할을 한다.
+파일 존재 여부와 파일 내 마커가 파이프라인 게이트 역할을 한다.
 
 ### Pipeline Gate Rules
 
-- PRD 파일(`docs/planning/prd/`)에 `## User Confirmation: YES`가 없으면 → BE/FE 구현 착수 금지
-- Wireframe 파일(`docs/planning/wireframes/`)에 `## User Confirmation: YES`가 없으면 → FE 구현 착수 금지
-- 사용자가 새 기능/프로젝트를 요청했는데 PRD가 없으면 → 대화로 요구사항을 수집한 뒤 PRD 작성
-- 사용자가 버그를 보고하면 → `docs/issues/bug_{n}.md` 생성, 해결 후 `bug_{n}_resolved.md`로 rename
-- 사용자가 변경 요청을 하면 → `docs/issues/cr_{n}.md` 생성, 사용자가 범위에 동의하면 `## User Confirmation: YES` 추가
+- `docs/planning/prd/{feature}.md`에 `## User Confirmation: YES`가 없으면 → 구현 착수 금지
+- `docs/planning/wireframes/{feature}.md`에 `## User Confirmation: YES`가 없으면 → FE 구현 착수 금지
+- 사용자가 새 기능을 요청했는데 해당 PRD가 없으면 → 대화로 요구사항 파악 후 PRD 작성
+- 사용자가 버그 보고 → Claude가 `docs/issues/bug_{n}.md` 생성, 해결 시 `bug_{n}_resolved.md`로 rename
+- 사용자가 변경 요청 → Claude가 `docs/issues/cr_{n}.md` 생성, 사용자 동의 후 `## User Confirmation: YES` 추가
 
-### Document Markers (Claude가 관리, 사용자가 직접 작성하지 않음)
+### Document Markers
+
+Claude가 관리하며, 사용자가 직접 작성하지 않는다.
 
 | Marker | 의미 | 적용 파일 |
 |--------|------|-----------|
-| `## User Confirmation: YES` | 사용자가 대화에서 구두 확인 완료 | PRD, wireframe, CR, feature spec |
+| `## User Confirmation: YES` | 사용자가 대화에서 확인 완료 | PRD, wireframe, CR, feature spec |
 | `## User Confirmation: REVISION_REQUESTED` | 사용자가 수정 요청 | PRD, wireframe, CR |
-| `## Status: RESOLVED` | 이슈 해결 완료 | issue 파일 |
+| `## Status: RESOLVED` | 이슈 해결 완료 | bug, CR 파일 |
 
 ### Issue File Templates
 
-Claude는 사용자 보고 시 아래 템플릿으로 파일을 생성한다.
+Claude는 사용자 보고 시 아래 형식으로 파일을 생성한다.
 
 **Bug Report** (`docs/issues/bug_{n}.md`):
 
 ```markdown
-# BUG-{n}: {Title}
+# BUG-{n}: {제목}
 
 ## Reported: {YYYY-MM-DD}
 ## Screen / Page
@@ -130,7 +124,7 @@ Claude는 사용자 보고 시 아래 템플릿으로 파일을 생성한다.
 **Change Request** (`docs/issues/cr_{n}.md`):
 
 ```markdown
-# CR-{n}: {Title}
+# CR-{n}: {제목}
 
 ## Reported: {YYYY-MM-DD}
 ## Current Behavior
@@ -140,6 +134,14 @@ Claude는 사용자 보고 시 아래 템플릿으로 파일을 생성한다.
 ## User Confirmation
 ## Status: OPEN | IN_PROGRESS | RESOLVED
 ```
+
+---
+
+## "Done" Criteria (All Teams)
+
+1. All unit/integration tests pass
+2. Zero compilation errors (`./gradlew build` + `npm run build`)
+3. E2E tests pass for related workflows (see [QA Guide](docs/conventions/qa/GUIDE.md))
 
 ---
 

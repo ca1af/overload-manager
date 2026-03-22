@@ -155,7 +155,7 @@ Move when:
 
 ## User Intake Protocol
 
-- If no PRD exists for the requested feature/project, gather **purpose, target users, core features, and constraints** from the user through conversation, then draft the PRD.
-- After writing a PRD or wireframe, present a summary to the user and ask for confirmation before adding `## User Confirmation: YES` to the document.
-- If the user requests revisions, update the document and mark `## User Confirmation: REVISION_REQUESTED` until the user re-confirms.
-- No implementation team may begin work on a feature whose PRD lacks `## User Confirmation: YES`.
+- 요청된 기능의 PRD가 없으면, 대화를 통해 **목적, 대상 사용자, 핵심 기능, 제약사항**을 파악한 뒤 PRD를 작성한다.
+- PRD 또는 wireframe 작성 후, 사용자에게 요약을 제시하고 확인을 받은 뒤 `## User Confirmation: YES`를 문서에 추가한다.
+- 사용자가 수정을 요청하면 문서를 갱신하고 `## User Confirmation: REVISION_REQUESTED`로 표기한다. 재확인 후 `YES`로 변경.
+- PRD에 `## User Confirmation: YES`가 없는 기능은 구현 팀에 핸드오프하지 않는다.

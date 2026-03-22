@@ -135,10 +135,10 @@ A feature is "done" only when:
 
 ## User Bug Report Handling
 
-When a user reports an issue through conversation:
+사용자가 대화로 문제를 보고하면:
 
-- Claude creates `docs/issues/bug_{n}.md` using the template in `CLAUDE.md`. The user never writes issue files.
-- Claude investigates the root cause, implements the fix, and asks the user to verify.
-- On user confirmation that the bug is fixed, rename `bug_{n}.md` → `bug_{n}_resolved.md` and set `## Status: RESOLVED`.
-- If the fix is not confirmed, keep the file as-is and continue the fix-verify cycle.
-- Bug files without `_resolved.md` suffix are treated as open issues by all teams.
+- Claude가 `docs/issues/bug_{n}.md`를 생성한다 (사용자가 직접 작성하지 않음, 템플릿은 CLAUDE.md 참조).
+- Claude가 원인을 조사하고 수정한 뒤, 사용자에게 확인을 요청한다.
+- 사용자가 해결을 확인하면 `bug_{n}.md` → `bug_{n}_resolved.md`로 rename하고 `## Status: RESOLVED`로 변경한다.
+- 해결이 확인되지 않으면 파일을 유지하고 수정-확인 사이클을 반복한다.
+- `_resolved.md` suffix가 없는 bug 파일은 모든 팀에서 미해결 이슈로 취급한다.
