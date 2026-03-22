@@ -4,8 +4,20 @@ import com.calaf.overloadmanager.exercise.domain.model.Equipment
 import com.calaf.overloadmanager.exercise.domain.model.ExerciseCategory
 import com.calaf.overloadmanager.exercise.domain.model.ExerciseType
 import com.calaf.overloadmanager.exercise.domain.port.`in`.*
+import jakarta.validation.constraints.NotBlank
 import java.math.BigDecimal
 import java.time.LocalDate
+
+data class CreateExerciseRequest(
+    @field:NotBlank(message = "Exercise name is required")
+    val nameKo: String,
+    val category: ExerciseCategory = ExerciseCategory.CHEST,
+) {
+    fun toCommand() = CreateExerciseCommand(
+        nameKo = nameKo,
+        category = category,
+    )
+}
 
 data class ExerciseResponse(
     val id: Long,

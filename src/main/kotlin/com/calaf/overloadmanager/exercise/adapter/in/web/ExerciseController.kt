@@ -4,8 +4,10 @@ import com.calaf.overloadmanager.common.ApiResponse
 import com.calaf.overloadmanager.common.PageResponse
 import com.calaf.overloadmanager.exercise.domain.model.ExerciseCategory
 import com.calaf.overloadmanager.exercise.domain.port.`in`.*
+import jakarta.validation.Valid
 import org.springframework.data.domain.Pageable
 import org.springframework.data.web.PageableDefault
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.security.core.Authentication
 import org.springframework.web.bind.annotation.*
@@ -17,7 +19,18 @@ class ExerciseController(
     private val getExerciseUseCase: GetExerciseUseCase,
     private val getPreviousSessionUseCase: GetPreviousSessionUseCase,
     private val getExerciseHistoryUseCase: GetExerciseHistoryUseCase,
+    private val createExerciseUseCase: CreateExerciseUseCase,
 ) {
+
+    @PostMapping
+    fun createExercise(
+        auth: Authentication,
+        @Valid @RequestBody request: CreateExerciseRequest,
+    ): ResponseEntity<ApiResponse<ExerciseResponse>> {
+        val userId = auth.principal as Long
+        val result = createExerciseUseCase.createExercise(userId, request.toCommand())
+        return ResponseEntity.status(HttpStatus.CREATED).body(ApiResponse.success(result.toResponse()))
+    }
 
     @GetMapping
     fun listExercises(

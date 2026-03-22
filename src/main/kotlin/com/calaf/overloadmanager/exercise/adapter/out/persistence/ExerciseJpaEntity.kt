@@ -66,6 +66,24 @@ class ExerciseJpaEntity(
     var createdAt: LocalDateTime = LocalDateTime.now(),
 )
 
+fun Exercise.toJpaEntity(createdBy: UserJpaEntity?) = ExerciseJpaEntity(
+    id = id,
+    createdBy = createdBy,
+    nameKo = nameKo,
+    nameEn = nameEn,
+    category = category,
+    exerciseType = exerciseType,
+    equipment = equipment,
+    primaryMuscle = primaryMuscle,
+    secondaryMuscles = secondaryMuscles,
+    defaultSetsMin = defaultSetsMin,
+    defaultSetsMax = defaultSetsMax,
+    defaultRepsMin = defaultRepsMin,
+    defaultRepsMax = defaultRepsMax,
+    isCustom = isCustom,
+    createdAt = createdAt,
+)
+
 fun ExerciseJpaEntity.toDomain() = Exercise(
     id = id,
     createdByUserId = createdBy?.id,

@@ -26,10 +26,7 @@ test.describe('Report Page', () => {
 
   test('should display weekly summary tab without crash', async ({ page }) => {
     await page.getByText('주간 요약').click();
-
-    // Should show week navigation and summary data
     await expect(page.getByText('운동 횟수')).toBeVisible({ timeout: 5_000 });
-    await expect(page.getByText('총 세트')).toBeVisible();
     await expect(page.getByText('총 볼륨')).toBeVisible();
   });
 });

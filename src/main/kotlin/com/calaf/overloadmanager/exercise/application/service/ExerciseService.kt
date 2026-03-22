@@ -2,8 +2,10 @@ package com.calaf.overloadmanager.exercise.application.service
 
 import com.calaf.overloadmanager.common.AppException
 import com.calaf.overloadmanager.common.ErrorCode
+import com.calaf.overloadmanager.exercise.domain.model.Equipment
 import com.calaf.overloadmanager.exercise.domain.model.Exercise
 import com.calaf.overloadmanager.exercise.domain.model.ExerciseCategory
+import com.calaf.overloadmanager.exercise.domain.model.ExerciseType
 import com.calaf.overloadmanager.exercise.domain.port.`in`.*
 import com.calaf.overloadmanager.exercise.domain.port.out.ExerciseHistoryRepository
 import com.calaf.overloadmanager.exercise.domain.port.out.ExerciseRepository
@@ -18,7 +20,7 @@ import java.math.RoundingMode
 class ExerciseService(
     private val exerciseRepository: ExerciseRepository,
     private val exerciseHistoryRepository: ExerciseHistoryRepository,
-) : ListExercisesUseCase, GetExerciseUseCase, GetPreviousSessionUseCase, GetExerciseHistoryUseCase {
+) : ListExercisesUseCase, GetExerciseUseCase, GetPreviousSessionUseCase, GetExerciseHistoryUseCase, CreateExerciseUseCase {
 
     override fun listExercises(
         userId: Long?,
@@ -107,6 +109,26 @@ class ExerciseService(
                 },
             )
         }
+    }
+
+    @Transactional
+    override fun createExercise(userId: Long, command: CreateExerciseCommand): ExerciseResult {
+        val existing = exerciseRepository.findByNameKoAndCreatedByUserId(command.nameKo, userId)
+        if (existing != null) {
+            return existing.toResult()
+        }
+
+        val exercise = Exercise(
+            createdByUserId = userId,
+            nameKo = command.nameKo,
+            nameEn = command.nameKo,
+            category = command.category,
+            exerciseType = ExerciseType.COMPOUND,
+            equipment = Equipment.BODYWEIGHT,
+            primaryMuscle = command.category.name,
+            isCustom = true,
+        )
+        return exerciseRepository.save(exercise).toResult()
     }
 
     private fun Exercise.toResult() = ExerciseResult(

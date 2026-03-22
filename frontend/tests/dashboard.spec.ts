@@ -48,14 +48,12 @@ test.describe('Dashboard', () => {
     await expect(page.getByText('안녕하세요')).toBeVisible();
   });
 
-  test.fixme('should navigate to workout tab (not yet implemented)', async ({ page }) => {
-    // The workout tab currently just navigates to home
-    await page.getByText('운동').click();
-    await page.waitForURL(/\/sessions/, { timeout: 5_000 });
+  test('should navigate to exercises tab', async ({ page }) => {
+    await page.getByRole('button', { name: '운동', exact: true }).click();
+    await page.waitForURL('/exercises', { timeout: 5_000 });
   });
 
-  test.fixme('should navigate to history tab (not yet implemented)', async ({ page }) => {
-    // The history tab route (/history) is not defined in the router
+  test('should navigate to history tab', async ({ page }) => {
     await page.getByText('기록').click();
     await page.waitForURL('/history', { timeout: 5_000 });
   });

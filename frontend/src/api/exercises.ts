@@ -33,6 +33,14 @@ export async function getPreviousSession(
   return res.data;
 }
 
+export async function createExercise(data: {
+  nameKo: string;
+  category: ExerciseCategory;
+}): Promise<Exercise> {
+  const res = await client.post<Exercise>('/exercises', data);
+  return res.data;
+}
+
 export async function getExerciseHistory(
   exerciseId: number,
   params?: { page?: number; size?: number },

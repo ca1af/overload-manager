@@ -1,5 +1,11 @@
 import client from './client';
-import type { WorkoutSession, WorkoutSessionSummary, PageResponse } from '@/types/domain';
+import type { WorkoutSession, WorkoutSessionSummary, WorkoutSet, PageResponse } from '@/types/domain';
+
+export interface AddExerciseResult {
+  id: number;
+  exerciseId: number;
+  orderIndex: number;
+}
 
 export async function getSessions(params?: {
   page?: number;
@@ -13,8 +19,8 @@ export async function getSessions(params?: {
 
 export async function createSession(): Promise<WorkoutSession> {
   const now = new Date();
-  const sessionDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
-  const startedAt = now.toISOString().replace('Z', ''); // LocalDateTime format
+  const sessionDate = now.toISOString().split('T')[0];
+  const startedAt = now.toISOString().replace('Z', '');
   const res = await client.post<WorkoutSession>('/sessions', {
     sessionDate,
     startedAt,
@@ -42,8 +48,8 @@ export async function deleteSession(id: number): Promise<void> {
 export async function addExercisesToSession(
   sessionId: number,
   exerciseIds: number[],
-): Promise<WorkoutSession> {
-  const res = await client.post<WorkoutSession>(
+): Promise<AddExerciseResult[]> {
+  const res = await client.post<AddExerciseResult[]>(
     `/sessions/${sessionId}/exercises`,
     { exerciseIds },
   );
@@ -63,8 +69,8 @@ export async function createSet(
   sessionId: number,
   sessionExerciseId: number,
   data: { weight: number; reps: number },
-): Promise<WorkoutSession> {
-  const res = await client.post<WorkoutSession>(
+): Promise<WorkoutSet> {
+  const res = await client.post<WorkoutSet>(
     `/sessions/${sessionId}/exercises/${sessionExerciseId}/sets`,
     data,
   );
@@ -76,8 +82,8 @@ export async function updateSet(
   sessionExerciseId: number,
   setId: number,
   data: { weight?: number; reps?: number; completed?: boolean; restSeconds?: number },
-): Promise<WorkoutSession> {
-  const res = await client.patch<WorkoutSession>(
+): Promise<WorkoutSet> {
+  const res = await client.patch<WorkoutSet>(
     `/sessions/${sessionId}/exercises/${sessionExerciseId}/sets/${setId}`,
     data,
   );

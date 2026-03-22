@@ -4,7 +4,7 @@ import { cn } from '@/utils/cn';
 
 const tabs = [
   { path: '/', label: '홈', icon: Home },
-  { path: '/sessions/new', label: '운동', icon: Dumbbell },
+  { path: '/exercises', label: '운동', icon: Dumbbell },
   { path: '/history', label: '기록', icon: ClipboardList },
   { path: '/report', label: '통계', icon: BarChart3 },
 ] as const;
@@ -25,13 +25,7 @@ export function BottomTabBar() {
           return (
             <button
               key={tab.path}
-              onClick={() => {
-                if (tab.path === '/sessions/new') {
-                  navigate('/');
-                } else {
-                  navigate(tab.path);
-                }
-              }}
+              onClick={() => navigate(tab.path)}
               className={cn(
                 'flex min-h-12 min-w-12 flex-col items-center justify-center gap-0.5 rounded-lg px-3 py-1',
                 isActive ? 'text-primary' : 'text-muted-foreground',
