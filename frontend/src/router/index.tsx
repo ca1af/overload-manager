@@ -9,9 +9,24 @@ import ReportPage from '@/pages/ReportPage';
 import ExercisesPage from '@/pages/ExercisesPage';
 import HistoryPage from '@/pages/HistoryPage';
 
+function isTokenValid(token: string | null): boolean {
+  if (!token) return false;
+  try {
+    const payload = JSON.parse(atob(token.split('.')[1]));
+    // Check expiry with 30s buffer
+    return payload.exp * 1000 > Date.now() - 30_000;
+  } catch {
+    return false;
+  }
+}
+
 function ProtectedRoute() {
   const token = useAuthStore((s) => s.accessToken);
-  if (!token) {
+  if (!isTokenValid(token)) {
+    // Clear stale auth if token exists but is invalid
+    if (token) {
+      useAuthStore.getState().clearAuth();
+    }
     return <Navigate to="/auth" replace />;
   }
   return <Outlet />;
@@ -19,8 +34,12 @@ function ProtectedRoute() {
 
 function PublicOnlyRoute() {
   const token = useAuthStore((s) => s.accessToken);
-  if (token) {
+  if (isTokenValid(token)) {
     return <Navigate to="/" replace />;
+  }
+  // Clear stale auth if token exists but expired
+  if (token) {
+    useAuthStore.getState().clearAuth();
   }
   return <Outlet />;
 }

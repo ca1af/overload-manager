@@ -19,9 +19,13 @@ const client = axios.create({
 });
 
 client.interceptors.request.use((config) => {
-  const token = useAuthStore.getState().accessToken;
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
+  // Don't send auth token for auth endpoints (register, login, refresh)
+  const isAuthEndpoint = config.url?.startsWith('/auth/');
+  if (!isAuthEndpoint) {
+    const token = useAuthStore.getState().accessToken;
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
   }
   return config;
 });
@@ -36,7 +40,7 @@ client.interceptors.response.use(
   },
   async (error) => {
     const original = error.config;
-    if (error.response?.status === 401 && !original._retry) {
+    if ((error.response?.status === 401 || error.response?.status === 403) && !original._retry) {
       original._retry = true;
       const refreshToken = useAuthStore.getState().refreshToken;
       if (refreshToken) {
