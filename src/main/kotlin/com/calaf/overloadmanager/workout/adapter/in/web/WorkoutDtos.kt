@@ -68,12 +68,12 @@ data class AddExerciseResponse(
 // Set DTOs
 data class CreateSetRequest(
     @field:PositiveOrZero(message = "Weight must be zero or positive")
-    val weight: BigDecimal = BigDecimal.ZERO,
+    val weight: BigDecimal? = null,
 
     @field:PositiveOrZero(message = "Reps must be zero or positive")
-    val reps: Int = 0,
+    val reps: Int? = null,
 
-    val completed: Boolean = false,
+    val completed: Boolean? = null,
     val restSeconds: Int? = null,
 )
 
@@ -116,9 +116,9 @@ fun AddExercisesRequest.toCommand() = AddExercisesCommand(
 )
 
 fun CreateSetRequest.toCommand() = CreateSetCommand(
-    weight = weight,
-    reps = reps,
-    completed = completed,
+    weight = weight ?: BigDecimal.ZERO,
+    reps = reps ?: 0,
+    completed = completed ?: false,
     restSeconds = restSeconds,
 )
 
