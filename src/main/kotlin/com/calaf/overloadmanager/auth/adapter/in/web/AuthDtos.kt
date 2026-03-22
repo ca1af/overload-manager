@@ -52,6 +52,7 @@ data class UserInfo(
     val id: Long,
     val email: String,
     val nickname: String,
+    val weightUnit: String,
 )
 
 // Mappers
@@ -75,6 +76,7 @@ fun LoginResult.toResponse() = LoginResponse(
         id = user.id,
         email = user.email,
         nickname = user.nickname,
+        weightUnit = user.weightUnit,
     ),
 )
 

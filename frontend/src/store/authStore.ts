@@ -1,13 +1,20 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
-import type { User } from '@/types/domain';
+import type { WeightUnit } from '@/types/domain';
+
+export interface AuthUser {
+  id: number;
+  email: string;
+  nickname: string;
+  weightUnit: WeightUnit;
+}
 
 interface AuthState {
   accessToken: string | null;
   refreshToken: string | null;
-  user: User | null;
-  setAuth: (data: { accessToken: string; refreshToken: string; user: User }) => void;
-  setUser: (user: User) => void;
+  user: AuthUser | null;
+  setAuth: (data: { accessToken: string; refreshToken: string; user: AuthUser }) => void;
+  setUser: (user: AuthUser) => void;
   clearAuth: () => void;
 }
 

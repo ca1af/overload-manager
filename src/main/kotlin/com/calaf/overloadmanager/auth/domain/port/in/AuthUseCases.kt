@@ -23,6 +23,7 @@ data class UserInfoResult(
     val id: Long,
     val email: String,
     val nickname: String,
+    val weightUnit: String,
 )
 
 data class TokenResult(

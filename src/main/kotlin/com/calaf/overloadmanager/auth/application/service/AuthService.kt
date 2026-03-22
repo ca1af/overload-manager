@@ -89,6 +89,7 @@ class AuthService(
                 id = user.id,
                 email = user.email,
                 nickname = user.nickname,
+                weightUnit = user.weightUnit.name.lowercase(),
             ),
         )
     }
