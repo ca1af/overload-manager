@@ -23,6 +23,13 @@ export function SessionSummaryModal({ open, onClose, session }: SessionSummaryMo
 
   if (!session) return null;
 
+  const exerciseCount = session.exercises.length;
+  const totalSets = session.exercises.reduce((sum, e) => sum + e.sets.length, 0);
+  const totalVolume = session.exercises.reduce(
+    (sum, e) => sum + e.sets.reduce((s, set) => s + set.weight * set.reps, 0),
+    0,
+  );
+
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent className="max-w-sm">
@@ -39,16 +46,16 @@ export function SessionSummaryModal({ open, onClose, session }: SessionSummaryMo
             <p className="text-xs text-muted-foreground">운동 시간</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-primary">{session.exerciseCount}</p>
+            <p className="text-2xl font-bold text-primary">{exerciseCount}</p>
             <p className="text-xs text-muted-foreground">운동 수</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-primary">{session.totalSets}</p>
+            <p className="text-2xl font-bold text-primary">{totalSets}</p>
             <p className="text-xs text-muted-foreground">총 세트</p>
           </div>
           <div className="text-center">
             <p className="text-2xl font-bold text-primary">
-              {formatWeight(session.totalVolumeKg, unit)}
+              {formatWeight(totalVolume, unit)}
             </p>
             <p className="text-xs text-muted-foreground">총 볼륨</p>
           </div>

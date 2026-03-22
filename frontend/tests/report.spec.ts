@@ -18,14 +18,13 @@ test.describe('Report Page', () => {
     await expect(page.locator('option', { hasText: '운동을 선택하세요' })).toBeAttached();
   });
 
-  test.fixme('should load exercises in dropdown (BUG-12: exercise list not loading)', async ({ page }) => {
-    // Exercise dropdown should be populated with exercises from the backend
+  test.fixme('should load exercises in dropdown (BUG-12: API param mismatch keyword vs search)', async ({ page }) => {
     const options = page.locator('select option');
-    // Should have more than just the placeholder option
-    await expect(options).toHaveCount(2, { timeout: 5_000 }); // at least placeholder + 1 exercise
+    const count = await options.count();
+    expect(count).toBeGreaterThan(1);
   });
 
-  test.fixme('should display weekly summary tab without crash (BUG-13: crash on weekly summary)', async ({ page }) => {
+  test('should display weekly summary tab without crash', async ({ page }) => {
     await page.getByText('주간 요약').click();
 
     // Should show week navigation and summary data

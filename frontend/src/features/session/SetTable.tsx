@@ -42,13 +42,13 @@ export function SetTable({
   const updateMutation = useMutation({
     mutationFn: (params: {
       setId: number;
-      data: { weightKg?: number; reps?: number; completed?: boolean; restSeconds?: number };
+      data: { weight?: number; reps?: number; completed?: boolean; restSeconds?: number };
     }) => updateSet(sessionId, sessionExerciseId, params.setId, params.data),
     onSuccess: invalidate,
   });
 
   const addMutation = useMutation({
-    mutationFn: (data: { weightKg: number; reps: number }) =>
+    mutationFn: (data: { weight: number; reps: number }) =>
       createSet(sessionId, sessionExerciseId, data),
     onSuccess: invalidate,
   });
@@ -59,7 +59,7 @@ export function SetTable({
   });
 
   const handleDebouncedUpdate = useCallback(
-    (setId: number, data: { weightKg?: number; reps?: number }) => {
+    (setId: number, data: { weight?: number; reps?: number }) => {
       if (debounceTimers.current[setId]) {
         clearTimeout(debounceTimers.current[setId]);
       }
@@ -87,14 +87,14 @@ export function SetTable({
   const handleAddSet = useCallback(() => {
     const lastSet = sets[sets.length - 1];
     addMutation.mutate({
-      weightKg: lastSet?.weightKg ?? 0,
+      weight: lastSet?.weight ?? 0,
       reps: lastSet?.reps ?? 10,
     });
   }, [addMutation, sets]);
 
   const totalVolume = sets.reduce((acc, set) => {
     if (set.completed) {
-      return acc + set.weightKg * set.reps;
+      return acc + set.weight * set.reps;
     }
     return acc;
   }, 0);
@@ -126,12 +126,12 @@ export function SetTable({
           </span>
           <Input
             type="number"
-            defaultValue={convertWeight(set.weightKg, unit)}
+            defaultValue={convertWeight(set.weight, unit)}
             className="h-10 text-center"
             onChange={(e) => {
               const val = parseFloat(e.target.value);
               if (!isNaN(val)) {
-                handleDebouncedUpdate(set.id, { weightKg: convertToKg(val, unit) });
+                handleDebouncedUpdate(set.id, { weight: convertToKg(val, unit) });
               }
             }}
           />

@@ -41,7 +41,7 @@ export function OverloadInfoSheet({ open, onOpenChange, exerciseId }: OverloadIn
                 <div className="mb-4 rounded-xl bg-accent p-3">
                   <p className="text-xs text-muted-foreground">이전 총 볼륨</p>
                   <p className="text-lg font-bold text-primary">
-                    {formatWeight(previousData.totalVolumeKg, unit)}
+                    {formatWeight(previousData.sets.reduce((sum, s) => sum + s.weight * s.reps, 0), unit)}
                   </p>
                 </div>
 
@@ -55,7 +55,7 @@ export function OverloadInfoSheet({ open, onOpenChange, exerciseId }: OverloadIn
                         {set.setNumber}세트
                       </span>
                       <span className="font-medium">
-                        {convertWeight(set.weightKg, unit)} {unit} x {set.reps}회
+                        {convertWeight(set.weight, unit)} {unit} x {set.reps}회
                       </span>
                     </div>
                   ))}

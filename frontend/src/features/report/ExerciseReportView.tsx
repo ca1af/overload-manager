@@ -77,7 +77,7 @@ export function ExerciseReportView() {
                             key={set.setNumber}
                             className="rounded-md bg-muted px-2 py-1 text-xs"
                           >
-                            {convertWeight(set.weightKg, unit)}{unit} x {set.reps}
+                            {convertWeight(set.weight, unit)}{unit} x {set.reps}
                           </span>
                         ))}
                       </div>

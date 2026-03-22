@@ -13,6 +13,7 @@ import { getSessions, createSession } from '@/api/sessions';
 import { getWeeklySummary } from '@/api/reports';
 import { formatWeight } from '@/utils/weight';
 import { formatDuration, formatDateKo } from '@/utils/format';
+import type { OverloadAchievement } from '@/types/domain';
 
 export default function DashboardPage() {
   const navigate = useNavigate();
@@ -44,7 +45,9 @@ export default function DashboardPage() {
   });
 
   const recentSessions = sessionsData?.content ?? [];
-  const overloadCount = weeklySummary?.overloadAchieved?.filter((o) => o.achieved).length ?? 0;
+  const overloadCount = weeklySummary?.overloadAchievements?.filter(
+    (o: OverloadAchievement) => o.improvement > 0,
+  ).length ?? 0;
 
   return (
     <div className="flex min-h-dvh flex-col pb-20">
@@ -66,7 +69,7 @@ export default function DashboardPage() {
                   <Calendar className="h-4 w-4 text-primary" />
                 </div>
                 <p className="text-lg font-bold">
-                  {weeklySummary.sessionCount}/{weeklySummary.weeklyGoalSessions}
+                  {weeklySummary.sessionCount ?? 0}회
                 </p>
                 <p className="text-xs text-muted-foreground">운동 횟수</p>
               </div>
@@ -75,7 +78,7 @@ export default function DashboardPage() {
                   <Dumbbell className="h-4 w-4 text-primary" />
                 </div>
                 <p className="text-lg font-bold">
-                  {formatWeight(weeklySummary.totalVolumeKg, unit)}
+                  {formatWeight(weeklySummary.totalVolume ?? 0, unit)}
                 </p>
                 <p className="text-xs text-muted-foreground">총 볼륨</p>
               </div>
@@ -120,13 +123,10 @@ export default function DashboardPage() {
                         {formatDateKo(session.sessionDate)}
                       </p>
                       <p className="text-xs text-muted-foreground">
-                        {session.exerciseCount}개 운동 / {session.totalSets}세트
+                        {session.exerciseCount}개 운동
                       </p>
                     </div>
                     <div className="text-right">
-                      <p className="text-sm font-medium">
-                        {formatWeight(session.totalVolumeKg, unit)}
-                      </p>
                       {session.durationSeconds && (
                         <p className="text-xs text-muted-foreground">
                           {formatDuration(session.durationSeconds)}

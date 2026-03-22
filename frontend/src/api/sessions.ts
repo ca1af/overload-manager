@@ -1,11 +1,11 @@
 import client from './client';
-import type { WorkoutSession, PageResponse } from '@/types/domain';
+import type { WorkoutSession, WorkoutSessionSummary, PageResponse } from '@/types/domain';
 
 export async function getSessions(params?: {
   page?: number;
   size?: number;
-}): Promise<PageResponse<WorkoutSession>> {
-  const res = await client.get<PageResponse<WorkoutSession>>('/sessions', {
+}): Promise<PageResponse<WorkoutSessionSummary>> {
+  const res = await client.get<PageResponse<WorkoutSessionSummary>>('/sessions', {
     params,
   });
   return res.data;
@@ -15,11 +15,11 @@ export async function createSession(): Promise<WorkoutSession> {
   const now = new Date();
   const sessionDate = now.toISOString().split('T')[0]; // YYYY-MM-DD
   const startedAt = now.toISOString().replace('Z', ''); // LocalDateTime format
-  const res = await client.post<{ data: WorkoutSession }>('/sessions', {
+  const res = await client.post<WorkoutSession>('/sessions', {
     sessionDate,
     startedAt,
   });
-  return res.data.data!;
+  return res.data;
 }
 
 export async function getSession(id: number): Promise<WorkoutSession> {
@@ -62,7 +62,7 @@ export async function removeExerciseFromSession(
 export async function createSet(
   sessionId: number,
   sessionExerciseId: number,
-  data: { weightKg: number; reps: number },
+  data: { weight: number; reps: number },
 ): Promise<WorkoutSession> {
   const res = await client.post<WorkoutSession>(
     `/sessions/${sessionId}/exercises/${sessionExerciseId}/sets`,
@@ -75,7 +75,7 @@ export async function updateSet(
   sessionId: number,
   sessionExerciseId: number,
   setId: number,
-  data: { weightKg?: number; reps?: number; completed?: boolean; restSeconds?: number },
+  data: { weight?: number; reps?: number; completed?: boolean; restSeconds?: number },
 ): Promise<WorkoutSession> {
   const res = await client.patch<WorkoutSession>(
     `/sessions/${sessionId}/exercises/${sessionExerciseId}/sets/${setId}`,

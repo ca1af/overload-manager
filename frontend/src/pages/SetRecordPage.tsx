@@ -32,7 +32,7 @@ export default function SetRecordPage() {
   });
 
   const sessionExercise = session?.exercises?.find((se) => se.id === seId);
-  const exerciseId = sessionExercise?.exercise.id;
+  const exerciseId = sessionExercise?.exerciseId;
 
   const { data: previousData } = useQuery({
     queryKey: ['previousSession', exerciseId],
@@ -51,10 +51,15 @@ export default function SetRecordPage() {
     );
   }
 
+  const prevTotalVolume = previousData?.sets.reduce(
+    (sum, s) => sum + s.weight * s.reps,
+    0,
+  ) ?? 0;
+
   return (
     <div className="flex min-h-dvh flex-col">
       <AppHeader
-        title={sessionExercise.exercise.nameKo}
+        title={sessionExercise.exerciseNameKo}
         showBack
         rightAction={
           <Button variant="ghost" size="icon" onClick={() => setSheetOpen(true)}>
@@ -64,7 +69,7 @@ export default function SetRecordPage() {
       />
 
       <main className="flex-1 px-4 py-4">
-        {previousData && previousData.sessionId !== null && (
+        {previousData && (
           <Card className="mb-4 border-primary/20 bg-accent">
             <CardContent className="p-3">
               <div className="flex items-center justify-between">
@@ -72,7 +77,7 @@ export default function SetRecordPage() {
                   이전 기록 ({previousData.sessionDate ? formatDate(previousData.sessionDate) : ''})
                 </p>
                 <p className="text-sm font-medium text-primary">
-                  {convertWeight(previousData.totalVolumeKg, unit).toLocaleString()} {unit}
+                  {convertWeight(prevTotalVolume, unit).toLocaleString()} {unit}
                 </p>
               </div>
               <div className="mt-2 flex flex-wrap gap-1">
@@ -81,7 +86,7 @@ export default function SetRecordPage() {
                     key={set.setNumber}
                     className="rounded bg-background px-1.5 py-0.5 text-xs"
                   >
-                    {convertWeight(set.weightKg, unit)}{unit} x {set.reps}
+                    {convertWeight(set.weight, unit)}{unit} x {set.reps}
                   </span>
                 ))}
               </div>
