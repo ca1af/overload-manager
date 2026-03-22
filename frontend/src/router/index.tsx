@@ -6,6 +6,8 @@ import ActiveSessionPage from '@/pages/ActiveSessionPage';
 import ExerciseSelectPage from '@/pages/ExerciseSelectPage';
 import SetRecordPage from '@/pages/SetRecordPage';
 import ReportPage from '@/pages/ReportPage';
+import ExercisesPage from '@/pages/ExercisesPage';
+import HistoryPage from '@/pages/HistoryPage';
 
 function ProtectedRoute() {
   const token = useAuthStore((s) => s.accessToken);
@@ -43,6 +45,8 @@ export const router = createBrowserRouter([
         path: '/sessions/:sessionId/exercises/:sessionExerciseId',
         element: <SetRecordPage />,
       },
+      { path: '/exercises', element: <ExercisesPage /> },
+      { path: '/history', element: <HistoryPage /> },
       { path: '/report', element: <ReportPage /> },
     ],
   },

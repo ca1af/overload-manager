@@ -1,18 +1,30 @@
 import client from './client';
-import type { WorkoutSession, PageResponse } from '@/types/domain';
+import type { WorkoutSession, WorkoutSessionSummary, WorkoutSet, PageResponse } from '@/types/domain';
+
+export interface AddExerciseResult {
+  id: number;
+  exerciseId: number;
+  orderIndex: number;
+}
 
 export async function getSessions(params?: {
   page?: number;
   size?: number;
-}): Promise<PageResponse<WorkoutSession>> {
-  const res = await client.get<PageResponse<WorkoutSession>>('/sessions', {
+}): Promise<PageResponse<WorkoutSessionSummary>> {
+  const res = await client.get<PageResponse<WorkoutSessionSummary>>('/sessions', {
     params,
   });
   return res.data;
 }
 
 export async function createSession(): Promise<WorkoutSession> {
-  const res = await client.post<WorkoutSession>('/sessions');
+  const now = new Date();
+  const sessionDate = now.toISOString().split('T')[0];
+  const startedAt = now.toISOString().replace('Z', '');
+  const res = await client.post<WorkoutSession>('/sessions', {
+    sessionDate,
+    startedAt,
+  });
   return res.data;
 }
 
@@ -36,8 +48,8 @@ export async function deleteSession(id: number): Promise<void> {
 export async function addExercisesToSession(
   sessionId: number,
   exerciseIds: number[],
-): Promise<WorkoutSession> {
-  const res = await client.post<WorkoutSession>(
+): Promise<AddExerciseResult[]> {
+  const res = await client.post<AddExerciseResult[]>(
     `/sessions/${sessionId}/exercises`,
     { exerciseIds },
   );
@@ -56,9 +68,9 @@ export async function removeExerciseFromSession(
 export async function createSet(
   sessionId: number,
   sessionExerciseId: number,
-  data: { weightKg: number; reps: number },
-): Promise<WorkoutSession> {
-  const res = await client.post<WorkoutSession>(
+  data: { weight: number; reps: number },
+): Promise<WorkoutSet> {
+  const res = await client.post<WorkoutSet>(
     `/sessions/${sessionId}/exercises/${sessionExerciseId}/sets`,
     data,
   );
@@ -69,9 +81,9 @@ export async function updateSet(
   sessionId: number,
   sessionExerciseId: number,
   setId: number,
-  data: { weightKg?: number; reps?: number; completed?: boolean; restSeconds?: number },
-): Promise<WorkoutSession> {
-  const res = await client.patch<WorkoutSession>(
+  data: { weight?: number; reps?: number; completed?: boolean; restSeconds?: number },
+): Promise<WorkoutSet> {
+  const res = await client.patch<WorkoutSet>(
     `/sessions/${sessionId}/exercises/${sessionExerciseId}/sets/${setId}`,
     data,
   );

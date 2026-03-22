@@ -21,4 +21,6 @@ interface ExerciseJpaRepository : JpaRepository<ExerciseJpaEntity, Long> {
         search: String?,
         pageable: Pageable,
     ): Page<ExerciseJpaEntity>
+
+    fun findByNameKoAndCreatedById(nameKo: String, createdById: Long): ExerciseJpaEntity?
 }

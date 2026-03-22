@@ -76,3 +76,12 @@ interface GetPreviousSessionUseCase {
 interface GetExerciseHistoryUseCase {
     fun getExerciseHistory(userId: Long, exerciseId: Long): List<ExerciseHistoryResult>
 }
+
+data class CreateExerciseCommand(
+    val nameKo: String,
+    val category: ExerciseCategory,
+)
+
+interface CreateExerciseUseCase {
+    fun createExercise(userId: Long, command: CreateExerciseCommand): ExerciseResult
+}

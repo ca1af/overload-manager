@@ -1,6 +1,16 @@
 import axios from 'axios';
 import { useAuthStore } from '@/store/authStore';
 
+export interface ApiResponse<T> {
+  success: boolean;
+  data?: T;
+  error?: {
+    code: string;
+    message: string;
+    details?: { field: string; message: string }[];
+  };
+}
+
 const client = axios.create({
   baseURL: '/api/v1',
   headers: {
@@ -17,7 +27,13 @@ client.interceptors.request.use((config) => {
 });
 
 client.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // Unwrap ApiResponse wrapper: { success, data, error } → data
+    if (response.data && typeof response.data === 'object' && 'success' in response.data) {
+      response.data = response.data.data;
+    }
+    return response;
+  },
   async (error) => {
     const original = error.config;
     if (error.response?.status === 401 && !original._retry) {
@@ -28,12 +44,15 @@ client.interceptors.response.use(
           const res = await axios.post('/api/v1/auth/refresh', {
             refreshToken,
           });
-          const { accessToken, refreshToken: newRefresh, user } = res.data;
-          useAuthStore.getState().setAuth({
-            accessToken,
-            refreshToken: newRefresh,
-            user,
-          });
+          const { accessToken, refreshToken: newRefresh } = res.data.data!;
+          const existingUser = useAuthStore.getState().user;
+          if (existingUser) {
+            useAuthStore.getState().setAuth({
+              accessToken,
+              refreshToken: newRefresh,
+              user: existingUser,
+            });
+          }
           original.headers.Authorization = `Bearer ${accessToken}`;
           return client(original);
         } catch {

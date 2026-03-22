@@ -28,7 +28,7 @@ export function SessionExerciseCard({ sessionId, sessionExercise }: SessionExerc
     >
       <CardContent className="flex items-center gap-3 p-4">
         <div className="flex-1">
-          <p className="text-sm font-medium">{sessionExercise.exercise.nameKo}</p>
+          <p className="text-sm font-medium">{sessionExercise.exerciseNameKo}</p>
           <p className="mt-1 text-xs text-muted-foreground">
             {completedSets} / {totalSets} 세트 완료
           </p>

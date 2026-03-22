@@ -1,10 +1,18 @@
 import client from './client';
-import type { User, WeightUnit } from '@/types/domain';
 
-interface AuthResponse {
+import type { WeightUnit } from '@/types/domain';
+
+interface UserInfo {
+  id: number;
+  email: string;
+  nickname: string;
+  weightUnit: WeightUnit;
+}
+
+export interface AuthResponse {
   accessToken: string;
   refreshToken: string;
-  user: User;
+  user: UserInfo;
 }
 
 export async function register(data: {

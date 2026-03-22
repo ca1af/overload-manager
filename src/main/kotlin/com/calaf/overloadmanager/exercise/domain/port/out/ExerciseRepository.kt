@@ -14,4 +14,8 @@ interface ExerciseRepository {
     ): PageResult<Exercise>
 
     fun findById(id: Long): Exercise?
+
+    fun save(exercise: Exercise): Exercise
+
+    fun findByNameKoAndCreatedByUserId(nameKo: String, userId: Long): Exercise?
 }
